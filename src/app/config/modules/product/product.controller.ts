@@ -7,7 +7,7 @@ const createProduct = async (req: Request, res: Response) => {
     const productData = req.body.product;
     const validationProductData = productValidationSchema.parse(productData);
     const result = await ProductService.createProductIntoDB(
-      validationProductData,
+      validationProductData
     );
 
     if (result) {
@@ -27,8 +27,11 @@ const createProduct = async (req: Request, res: Response) => {
 };
 
 const getAllProducts = async (req: Request, res: Response) => {
+  const { searchTerm } = req.query;
   try {
-    const result = await ProductService.getAllProductsFromDB();
+    const result = await ProductService.getAllProductsFromDB(
+      searchTerm as string
+    );
     if (result) {
       res.send({
         success: true,
@@ -70,7 +73,7 @@ const updateProduct = async (req: Request, res: Response) => {
 
     const result = await ProductService.updateProductIntoDB(
       id,
-      updatedProductData,
+      updatedProductData
     );
 
     if (result) {

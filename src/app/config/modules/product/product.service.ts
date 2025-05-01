@@ -12,8 +12,11 @@ const createProductIntoDB = async (productData: TProduct) => {
   return result;
 };
 
-const getAllProductsFromDB = async () => {
-  const result = await Product.find({});
+const getAllProductsFromDB = async (searchTerm?: string) => {
+  const filter = searchTerm
+    ? { name: { $regex: searchTerm, $options: "i" } }
+    : {};
+  const result = await Product.find(filter);
   return result;
 };
 
@@ -25,7 +28,7 @@ const getSingleProductFromDB = async (id: string) => {
 
 const updateProductIntoDB = async (
   id: string,
-  productData: Partial<TProduct>,
+  productData: Partial<TProduct>
 ) => {
   const objectId = new Types.ObjectId(id);
   const existingProduct = await Product.findOne({ _id: objectId });
@@ -44,7 +47,7 @@ const updateProductIntoDB = async (
     {
       new: true,
       runValidators: true,
-    },
+    }
   );
   return result;
 };
