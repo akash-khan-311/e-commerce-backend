@@ -78,7 +78,7 @@ const productSchema = new mongoose.Schema<
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 productSchema.methods.isExists = async function (name: string) {
@@ -87,7 +87,18 @@ productSchema.methods.isExists = async function (name: string) {
   return product;
 };
 
+productSchema.pre("find", function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+productSchema.pre("aggregate", function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+
+  next();
+});
+
 export const Product = mongoose.model<TProduct, ProductModel>(
   "Product",
-  productSchema
+  productSchema,
 );

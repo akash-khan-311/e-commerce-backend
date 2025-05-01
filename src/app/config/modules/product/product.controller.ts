@@ -7,7 +7,7 @@ const createProduct = async (req: Request, res: Response) => {
     const productData = req.body.product;
     const validationProductData = productValidationSchema.parse(productData);
     const result = await ProductService.createProductIntoDB(
-      validationProductData
+      validationProductData,
     );
 
     if (result) {
@@ -26,6 +26,90 @@ const createProduct = async (req: Request, res: Response) => {
   }
 };
 
+const getAllProducts = async (req: Request, res: Response) => {
+  try {
+    const result = await ProductService.getAllProductsFromDB();
+    if (result) {
+      res.send({
+        success: true,
+        message: "Products fetched successfully",
+        data: result,
+      });
+    }
+  } catch (error: any) {
+    res.status(400).send({
+      success: false,
+      message: error.message || "Failed to fetch products",
+    });
+  }
+};
+
+const getSingleProduct = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  try {
+    const result = await ProductService.getSingleProductFromDB(id);
+    if (result) {
+      res.send({
+        success: true,
+        message: "Product fetched successfully",
+        data: result,
+      });
+    }
+  } catch (error: any) {
+    res.status(400).send({
+      success: false,
+      message: error.message || "Failed to fetch products",
+    });
+  }
+};
+
+const updateProduct = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const updatedProductData = req.body.product;
+
+    const result = await ProductService.updateProductIntoDB(
+      id,
+      updatedProductData,
+    );
+
+    if (result) {
+      res.send({
+        success: true,
+        message: "Product updated successfully",
+        data: result,
+      });
+    }
+  } catch (error: any) {
+    res.status(400).send({
+      success: false,
+      message: error.message || "Failed to update product",
+    });
+  }
+};
+
+const deleteProduct = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  try {
+    const result = await ProductService.deleteProductFromDB(id);
+    if (result) {
+      res.status(200).send({
+        success: true,
+        message: "Product deleted successfully",
+        data: result,
+      });
+    }
+  } catch (error: any) {
+    res.status(400).send({
+      success: false,
+      message: error.message || "Failed to delete product",
+    });
+  }
+};
 export const ProductController = {
   createProduct,
+  getAllProducts,
+  getSingleProduct,
+  updateProduct,
+  deleteProduct,
 };
