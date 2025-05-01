@@ -34,6 +34,18 @@ const createOrderToDB = async (orderData: IOrder) => {
   return result;
 };
 
+const getAllOrdersFromDB = async () => {
+  const result = await Order.find({});
+  return result;
+};
+
+const getSingleOrderFromDB = async (email: string) => {
+  const result = await Order.find({ email });
+  return result;
+};
+
 export const OrderService = {
   createOrderToDB,
+  getAllOrdersFromDB,
+  getSingleOrderFromDB,
 };
