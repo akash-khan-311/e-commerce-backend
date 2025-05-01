@@ -23,6 +23,7 @@ export type TProduct = {
 };
 
 export type productMethods = {
+  // eslint-disable-next-line no-unused-vars
   isExists(name: string): Promise<TProduct | null>;
 };
 
